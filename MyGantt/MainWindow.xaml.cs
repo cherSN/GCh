@@ -74,12 +74,12 @@ namespace MyGantt
 
             // Create timelines and define how they should be presented
             //nGanttChart.CreateTimeLine(new PeriodYearSplitter(minDate, maxDate), FormatYear);
-            nGanttChart.CreateTimeLine(new PeriodMonthSplitter(minDate, maxDate), FormatMonth);
+            //nGanttChart.CreateTimeLine(new PeriodMonthSplitter(minDate, maxDate), FormatMonth);
             //nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDayName);
-
+            nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay, DetermineBackground);
             // Set the timeline to atatch gridlines to
-            var gridLineTimeLine = nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay);
-            nGanttChart.SetGridLinesTimeline(gridLineTimeLine, DetermineBackground);
+            //var gridLineTimeLine = nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay, DetermineBackground);
+            //nGanttChart.SetGridLinesTimeline(gridLineTimeLine, DetermineBackground);
 
             //// Create and data
             //var rowgroup1 = nGanttChart.CreateGanttRowGroup("Group");

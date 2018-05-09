@@ -29,10 +29,10 @@
                                     <Setter Property="ng:GanttRowPanel.EndDate" Value="{Binding Path=End}"/>
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border BorderBrush="Gray" BorderThickness="0,1,1,0">
-                                        <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{Binding Path=Name}"/>
+                            <ItemsControl.ItemTemplate> <!--TimeLineItem-->
+                                <DataTemplate>  
+                                    <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding Path=BackgroundColor}">
+                                        <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{Binding Path=Name}" /> 
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -62,12 +62,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border  x:Name="root" BorderBrush="#FF55CD32" BorderThickness="3"  >
-        <!--<Grid.RowDefinitions>
-            --><!--<RowDefinition Height="*"></RowDefinition>-->
-            <!--<RowDefinition Height="5"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>--><!--
-        </Grid.RowDefinitions>-->
+    <Border  x:Name="root" BorderBrush="#FF55CD32" BorderThickness="3" >
         <ContentControl ContentTemplate="{StaticResource GanttGrid}" Content="{Binding Path=GanttData}"/>
     </Border>
 </UserControl>

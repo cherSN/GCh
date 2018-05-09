@@ -25,15 +25,15 @@ namespace nGantt
     {
         private GanttChartData ganttChartData = new GanttChartData();
         //private TimeLine gridLineTimeLine;
-        private ObservableCollection<TimeLine> gridLineTimeLines = new ObservableCollection<TimeLine>();
+        ////private ObservableCollection<TimeLine> gridLineTimeLines = new ObservableCollection<TimeLine>();
 
         public delegate string PeriodNameFormatter(Period period);
         public delegate Brush BackgroundFormatter(TimeLineItem timeLineItem);
 
 
         public GanttChartData GanttData { get { return ganttChartData; } }
-        public ObservableCollection<TimeLine> GridLineTimeLine { get { return gridLineTimeLines; } }
-        public ObservableCollection<TimeLine> TimeLines { get; private set; }
+        ////public ObservableCollection<TimeLine> GridLineTimeLine { get { return gridLineTimeLines; } }
+        ////public ObservableCollection<TimeLine> TimeLines { get; private set; }
         public Period SelectionPeriod { get; private set; }
 
 
@@ -65,26 +65,45 @@ namespace nGantt
             return timeline;
         }
 
-        public void SetGridLinesTimeline(TimeLine timeline)
+        public TimeLine CreateTimeLine(PeriodSplitter.PeriodSplitter splitter, PeriodNameFormatter PeriodNameFormatter, BackgroundFormatter backgroundFormatter)
         {
-            if (!ganttChartData.TimeLines.Contains(timeline))
-                throw new Exception("Invalid timeline");
+            if (splitter.MaxDate != GanttData.MaxDate || splitter.MinDate != GanttData.MinDate)
+                throw new ArgumentException("The timeline must have the same max and min -date as the chart");
 
-            //gridLineTimeLine = timeline;
-        }
+            var timeLineParts = splitter.Split();
 
-        public void SetGridLinesTimeline(TimeLine timeline, BackgroundFormatter backgroundFormatter)
-        {
-            if (!ganttChartData.TimeLines.Contains(timeline))
-                throw new Exception("Invalid timeline");
-
-            foreach (var item in timeline.Items)
+            var timeline = new TimeLine();
+            foreach (var p in timeLineParts)
+            {
+                TimeLineItem item = new TimeLineItem() { Name = PeriodNameFormatter(p), Start = p.Start, End = p.End.AddSeconds(-1) };
                 item.BackgroundColor = backgroundFormatter(item);
+                timeline.Items.Add(item);
+            }
 
-            gridLineTimeLines.Clear();
-            gridLineTimeLines.Add(timeline);
-            //gridLineTimeLine = timeline;
+            ganttChartData.TimeLines.Add(timeline);
+            return timeline;
         }
+
+        ////public void SetGridLinesTimeline(TimeLine timeline)
+        ////{
+        ////    if (!ganttChartData.TimeLines.Contains(timeline))
+        ////        throw new Exception("Invalid timeline");
+
+        ////    //gridLineTimeLine = timeline;
+        ////}
+
+        ////public void SetGridLinesTimeline(TimeLine timeline, BackgroundFormatter backgroundFormatter)
+        ////{
+        ////    if (!ganttChartData.TimeLines.Contains(timeline))
+        ////        throw new Exception("Invalid timeline");
+
+        ////    foreach (var item in timeline.Items)
+        ////        item.BackgroundColor = backgroundFormatter(item);
+
+        ////    gridLineTimeLines.Clear();
+        ////    gridLineTimeLines.Add(timeline);
+        ////    //gridLineTimeLine = timeline;
+        ////}
 
 
 
