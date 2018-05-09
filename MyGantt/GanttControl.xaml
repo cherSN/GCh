@@ -8,16 +8,16 @@
              d:DesignHeight="290" d:DesignWidth="485" DataContext="{Binding}">
 
     <UserControl.Resources>
-        <DataTemplate x:Key="GanttTimeLineTemplate">
-            <ItemsControl ItemsSource="{Binding}">
+        <DataTemplate x:Key="GanttTimeLineTemplate">    
+            <ItemsControl ItemsSource="{Binding}">  <!--GanttChartData.TimeLines-->
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical"/>
+                        <StackPanel Orientation="Vertical"> </StackPanel>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
+                <ItemsControl.ItemTemplate> <!--TimeLine=GanttChartData.TimeLines.Items[i]-->
                     <DataTemplate>
-                        <ItemsControl ItemsSource="{Binding Path=Items}" Height="20">
+                        <ItemsControl ItemsSource="{Binding Path=Items}" Height="20" AlternationCount="0" Background="{Binding Path=BackgroundColor}"> <!--TimeLine=GanttChartData.TimeLines.Items[i]-->
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ng:GanttRowPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" MinDate="{Binding Path=GanttData.MinDate}" MaxDate="{Binding Path=GanttData.MaxDate}"/>
@@ -29,7 +29,7 @@
                                     <Setter Property="ng:GanttRowPanel.EndDate" Value="{Binding Path=End}"/>
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
-                            <ItemsControl.ItemTemplate> <!--TimeLineItem-->
+                            <ItemsControl.ItemTemplate> <!--TimeLineItem=TimeLine.Items[i]-->
                                 <DataTemplate>  
                                     <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding Path=BackgroundColor}">
                                         <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{Binding Path=Name}" /> 

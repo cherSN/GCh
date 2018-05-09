@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using nGantt.GanttChart;
 using nGantt.PeriodSplitter;
 
+
 namespace MyGantt
 {
     /// <summary>
@@ -76,7 +77,7 @@ namespace MyGantt
             //nGanttChart.CreateTimeLine(new PeriodYearSplitter(minDate, maxDate), FormatYear);
             //nGanttChart.CreateTimeLine(new PeriodMonthSplitter(minDate, maxDate), FormatMonth);
             //nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDayName);
-            nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay, DetermineBackground);
+            nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay, DetermineBackground,"Day", new SolidColorBrush(Colors.Red));
             // Set the timeline to atatch gridlines to
             //var gridLineTimeLine = nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay, DetermineBackground);
             //nGanttChart.SetGridLinesTimeline(gridLineTimeLine, DetermineBackground);

@@ -84,6 +84,27 @@ namespace nGantt
             return timeline;
         }
 
+        public TimeLine CreateTimeLine(PeriodSplitter.PeriodSplitter splitter, PeriodNameFormatter PeriodNameFormatter, 
+            BackgroundFormatter backgroundFormatter, string timeLineName, Brush timeLineColor)
+        {
+            if (splitter.MaxDate != GanttData.MaxDate || splitter.MinDate != GanttData.MinDate)
+                throw new ArgumentException("The timeline must have the same max and min -date as the chart");
+
+            var timeLineParts = splitter.Split();
+
+            TimeLine timeline = new TimeLine();
+            timeline.Name = timeLineName;
+            timeline.BackgroundColor = timeLineColor;
+            foreach (var p in timeLineParts)
+            {
+                TimeLineItem item = new TimeLineItem() { Name = PeriodNameFormatter(p), Start = p.Start, End = p.End.AddSeconds(-1) };
+                item.BackgroundColor = backgroundFormatter(item);
+                timeline.Items.Add(item);
+            }
+
+            ganttChartData.TimeLines.Add(timeline);
+            return timeline;
+        }
         ////public void SetGridLinesTimeline(TimeLine timeline)
         ////{
         ////    if (!ganttChartData.TimeLines.Contains(timeline))
