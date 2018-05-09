@@ -54,6 +54,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="GanttControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -62,12 +66,25 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GanttChart\GanttChartData.cs" />
+    <Compile Include="GanttChart\GanttRowPanel.cs" />
+    <Compile Include="GanttChart\TimeLine.cs" />
+    <Compile Include="GanttChart\TimeLineItem.cs" />
+    <Compile Include="GanttControl.xaml.cs">
+      <DependentUpon>GanttControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PeriodSplitter\Period.cs" />
+    <Compile Include="PeriodSplitter\PeriodDaySplitter.cs" />
+    <Compile Include="PeriodSplitter\PeriodHourSplitter.cs" />
+    <Compile Include="PeriodSplitter\PeriodMonthSplitter.cs" />
+    <Compile Include="PeriodSplitter\PeriodSplitter.cs" />
+    <Compile Include="PeriodSplitter\PeriodYearSplitter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -93,5 +110,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
