@@ -24,14 +24,15 @@ namespace nGantt
     public partial class GanttControl : UserControl
     {
         private GanttChartData ganttChartData = new GanttChartData();
-        private TimeLine gridLineTimeLine;
+        //private TimeLine gridLineTimeLine;
         private ObservableCollection<TimeLine> gridLineTimeLines = new ObservableCollection<TimeLine>();
 
         public delegate string PeriodNameFormatter(Period period);
         public delegate Brush BackgroundFormatter(TimeLineItem timeLineItem);
 
-        public ObservableCollection<TimeLine> GridLineTimeLine { get { return gridLineTimeLines; } }
+
         public GanttChartData GanttData { get { return ganttChartData; } }
+        public ObservableCollection<TimeLine> GridLineTimeLine { get { return gridLineTimeLines; } }
         public ObservableCollection<TimeLine> TimeLines { get; private set; }
         public Period SelectionPeriod { get; private set; }
 
@@ -69,7 +70,7 @@ namespace nGantt
             if (!ganttChartData.TimeLines.Contains(timeline))
                 throw new Exception("Invalid timeline");
 
-            gridLineTimeLine = timeline;
+            //gridLineTimeLine = timeline;
         }
 
         public void SetGridLinesTimeline(TimeLine timeline, BackgroundFormatter backgroundFormatter)
