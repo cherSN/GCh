@@ -17,10 +17,15 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate> <!--TimeLine=GanttChartData.TimeLines.Items[i]-->
                     <DataTemplate>
+                        <StackPanel> <!--Delete-->
+                        <TextBox Text="{Binding Path=Name}" Background="{Binding Path=BackgroundColor}"/>
                         <ItemsControl ItemsSource="{Binding Path=Items}" Height="20" AlternationCount="0" Background="{Binding Path=BackgroundColor}"> <!--TimeLine=GanttChartData.TimeLines.Items[i]-->
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <ng:GanttRowPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" MinDate="{Binding Path=GanttData.MinDate}" MaxDate="{Binding Path=GanttData.MaxDate}"/>
+                                        <!--<StackPanel Orientation="Horizontal"></StackPanel>-->
+                                    <ng:GanttRowPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                    AncestorType={x:Type UserControl}}}" MinDate="{Binding Path=GanttData.MinDate}" 
+                                    MaxDate="{Binding Path=GanttData.MaxDate}"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemContainerStyle>
@@ -32,18 +37,28 @@
                             <ItemsControl.ItemTemplate> <!--TimeLineItem=TimeLine.Items[i]-->
                                 <DataTemplate>  
                                     <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding Path=BackgroundColor}">
-                                        <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{Binding Path=Name}" /> 
-                                    </Border>
+                                        <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Path=Start}" Background="#FFF1F15C"  />
+                                                <TextBlock Text="{Binding Path=End}" Background="#FFED86F7"  />
+                                                <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{Binding Path=Name}" />
+                                        </StackPanel>
+                                        </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+                        </StackPanel>    
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DataTemplate>
 
         <DataTemplate x:Key="GanttGrid">
-            <Grid Name="GanttMainGrid">
+            <StackPanel>
+                <TextBox  Text="{Binding Path=MinDate}" Background="#FFF7F7AF"  />
+                <TextBox  Text="{Binding Path=MaxDate}" Background="#FF48D336" />
+                <TextBox  Text="{Binding Path=Name}" Background="#FFDB88E8" />
+
+                <Grid Name="GanttMainGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="1"></RowDefinition>
@@ -59,6 +74,7 @@
                 <ContentControl Grid.Row="0" BorderBrush="Blue" BorderThickness="1"  Grid.Column="1" Grid.ColumnSpan="2" ContentTemplate="{StaticResource GanttTimeLineTemplate}" Content="{Binding Path=TimeLines}" Margin="0,0,18,0"/>
     
             </Grid>
+            </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
 

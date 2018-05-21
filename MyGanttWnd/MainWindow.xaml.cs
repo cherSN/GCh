@@ -1,4 +1,6 @@
-﻿using System;
+﻿using nGantt.GanttChart;
+using nGantt.PeriodSplitter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,22 +14,31 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using nGantt.GanttChart;
-using nGantt.PeriodSplitter;
 
-
-namespace MyGantt
+namespace MyGanttWnd
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
+   
     public partial class MainWindow : Window
     {
+        private GanttChartData ganttChartData = new GanttChartData();
+        public delegate string PeriodNameFormatter(Period period);
+        public delegate Brush BackgroundFormatter(TimeLineItem timeLineItem);
+        public GanttChartData GanttData { get { return ganttChartData; } }
         private int GantLenght { get; set; }
+
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
+            //this.ganttChartData.MinDate = DateTime.Parse("2018-01-01");
+            //this.ganttChartData.MaxDate = this.ganttChartData.MinDate.AddDays(1);
+        }
+
+        public void Initialize(DateTime minDate, DateTime maxDate)
+        {
+            this.ganttChartData.MinDate = minDate;
+            this.ganttChartData.MaxDate = maxDate;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -59,20 +70,70 @@ namespace MyGantt
 
 
         }
-
-        private System.Windows.Media.Brush DetermineBackground(TimeLineItem timeLineItem)
+        public TimeLine CreateTimeLine(PeriodSplitter splitter, PeriodNameFormatter PeriodNameFormatter)
         {
-            if (timeLineItem.End.Date.DayOfWeek == DayOfWeek.Saturday || timeLineItem.End.Date.DayOfWeek == DayOfWeek.Sunday)
-                return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.LightBlue);
-            else
-                return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            if (splitter.MaxDate != GanttData.MaxDate || splitter.MinDate != GanttData.MinDate)
+                throw new ArgumentException("The timeline must have the same max and min -date as the chart");
+
+            var timeLineParts = splitter.Split();
+
+            var timeline = new TimeLine();
+            foreach (var p in timeLineParts)
+            {
+                timeline.Items.Add(new TimeLineItem() { Name = PeriodNameFormatter(p), Start = p.Start, End = p.End.AddSeconds(-1) });
+            }
+
+            ganttChartData.TimeLines.Add(timeline);
+            return timeline;
         }
+
+        public TimeLine CreateTimeLine(PeriodSplitter splitter, PeriodNameFormatter PeriodNameFormatter, BackgroundFormatter backgroundFormatter)
+        {
+            if (splitter.MaxDate != GanttData.MaxDate || splitter.MinDate != GanttData.MinDate)
+                throw new ArgumentException("The timeline must have the same max and min -date as the chart");
+
+            var timeLineParts = splitter.Split();
+
+            var timeline = new TimeLine();
+            foreach (var p in timeLineParts)
+            {
+                TimeLineItem item = new TimeLineItem() { Name = PeriodNameFormatter(p), Start = p.Start, End = p.End.AddSeconds(-1) };
+                item.BackgroundColor = backgroundFormatter(item);
+                timeline.Items.Add(item);
+            }
+
+            ganttChartData.TimeLines.Add(timeline);
+            return timeline;
+        }
+
+        public TimeLine CreateTimeLine(PeriodSplitter splitter, PeriodNameFormatter PeriodNameFormatter,
+            BackgroundFormatter backgroundFormatter, string timeLineName, Brush timeLineColor)
+        {
+            if (splitter.MaxDate != GanttData.MaxDate || splitter.MinDate != GanttData.MinDate)
+                throw new ArgumentException("The timeline must have the same max and min -date as the chart");
+
+            var timeLineParts = splitter.Split();
+
+            TimeLine timeline = new TimeLine();
+            timeline.Name = timeLineName;
+            timeline.BackgroundColor = timeLineColor;
+            foreach (var p in timeLineParts)
+            {
+                TimeLineItem item = new TimeLineItem() { Name = PeriodNameFormatter(p), Start = p.Start, End = p.End.AddSeconds(-1) };
+                item.BackgroundColor = backgroundFormatter(item);
+                timeline.Items.Add(item);
+            }
+
+            ganttChartData.TimeLines.Add(timeline);
+            return timeline;
+        }
+
 
         private void CreateData(DateTime minDate, DateTime maxDate)
         {
             // Set max and min dates
-            nGanttChart.Initialize(minDate, maxDate);
-            nGanttChart.GanttData.Name = "G data";
+            Initialize(minDate, maxDate);
+            GanttData.Name = "G data";
 
 
             // Create timelines and define how they should be presented
@@ -81,7 +142,7 @@ namespace MyGantt
             //nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDayName);
             //nGanttChart.CreateTimeLine(new PeriodYearSplitter(minDate, maxDate), FormatYear, DetermineBackground, "Year", new SolidColorBrush(Colors.LightSkyBlue));
             //nGanttChart.CreateTimeLine(new PeriodMonthSplitter(minDate, maxDate), FormatMonth, DetermineBackground, "Month", new SolidColorBrush(Colors.LightCoral));
-            nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay, DetermineBackground,"Day", new SolidColorBrush(Colors.LightGreen));
+            CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay, DetermineBackground, "Day", new SolidColorBrush(Colors.LightGreen));
             // Set the timeline to atatch gridlines to
             //var gridLineTimeLine = nGanttChart.CreateTimeLine(new PeriodDaySplitter(minDate, maxDate), FormatDay, DetermineBackground);
             //nGanttChart.SetGridLinesTimeline(gridLineTimeLine, DetermineBackground);
@@ -103,8 +164,6 @@ namespace MyGantt
 
         }
 
-
-
         private string FormatYear(Period period)
         {
             return period.Start.Year.ToString();
@@ -112,7 +171,7 @@ namespace MyGantt
 
         private string FormatMonth(Period period)
         {
-            return period.Start.ToString("MMMM")+" "+period.Start.Year.ToString();
+            return period.Start.ToString("MMMM") + " " + period.Start.Year.ToString();
         }
 
         private string FormatDay(Period period)
@@ -125,5 +184,12 @@ namespace MyGantt
             return period.Start.DayOfWeek.ToString().Substring(0, 1);
         }
 
+        private System.Windows.Media.Brush DetermineBackground(TimeLineItem timeLineItem)
+        {
+            if (timeLineItem.End.Date.DayOfWeek == DayOfWeek.Saturday || timeLineItem.End.Date.DayOfWeek == DayOfWeek.Sunday)
+                return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.LightBlue);
+            else
+                return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+        }
     }
 }

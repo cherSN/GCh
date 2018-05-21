@@ -42,6 +42,8 @@ namespace nGantt
             InitializeComponent();
             DataContext = this;
             SelectionPeriod = new Period();
+            this.ganttChartData.MinDate = DateTime.Parse("2018-01-01");
+            this.ganttChartData.MaxDate = this.ganttChartData.MinDate.AddDays(1);
         }
         public void Initialize(DateTime minDate, DateTime maxDate)
         {
