@@ -2,6 +2,7 @@
 using nGantt.PeriodSplitter;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,21 +29,52 @@ namespace MyGanttWnd
 
         public MainWindow()
         {
+            SetDatas();
             InitializeComponent();
             this.DataContext = this;
-            SetDatas();
+
         }
 
 
         private void SetDatas()
         {
-            GantLenght = 5;
+            GantLenght = 60;
             this.ganttChartData.MinDate = DateTime.Parse("2018-01-01");
             this.ganttChartData.MaxDate = this.ganttChartData.MinDate.AddDays(GantLenght);
             this.ganttChartData.NName = "G data";
+            CreateTimeLine(new PeriodMonthSplitter(this.ganttChartData.MinDate, this.ganttChartData.MaxDate), FormatMonth, DetermineBackground, "Month", new SolidColorBrush(Colors.LightCoral));
             CreateTimeLine(new PeriodDaySplitter(this.ganttChartData.MinDate, this.ganttChartData.MaxDate), FormatDay, DetermineBackground, "Day", new SolidColorBrush(Colors.LightGreen));
 
+            // Create and data
+            var rowgroup1 = CreateGanttRowGroup("Group");
+            var row1 = CreateGanttRow(rowgroup1, "GanttRow 1");
+            AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2018-01-03"), End = DateTime.Parse("2018-01-05"), Name = "GanttRow 1:GanttTask 1", TaskProgressVisibility = System.Windows.Visibility.Hidden });
+            AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2018-01-05"), End = DateTime.Parse("2018-01-06"), Name = "GanttRow 1:GanttTask 2" });
+            AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2018-01-03"), End = DateTime.Parse("2018-01-08"), Name = "GanttRow 1:GanttTask 3" });
+
+
         }
+
+        public HeaderedGanttRowGroup CreateGanttRowGroup(string name)
+        {
+            var rowGroup = new HeaderedGanttRowGroup() { Name = name };
+            this.ganttChartData.RowGroups.Add(rowGroup);
+            return rowGroup;
+        }
+
+        public GanttRow CreateGanttRow(GanttRowGroup rowGroup, string name)
+        {
+            var rowHeader = new GanttRowHeader() { Name = name };
+            var row = new GanttRow() { RowHeader = rowHeader, Tasks = new ObservableCollection<GanttTask>() };
+            rowGroup.Rows.Add(row);
+            return row;
+        }
+        public void AddGanttTask(GanttRow row, GanttTask task)
+        {
+            if (task.Start < ganttChartData.MaxDate && task.End > ganttChartData.MinDate)
+                row.Tasks.Add(task);
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -133,5 +165,10 @@ namespace MyGanttWnd
             else
                 return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
         }
+
+
+
+
+
     }
 }

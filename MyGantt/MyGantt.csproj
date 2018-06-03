@@ -66,8 +66,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GanttChart\ExpandableGanttRowGroup.cs" />
     <Compile Include="GanttChart\GanttChartData.cs" />
+    <Compile Include="GanttChart\GanttRow.cs" />
+    <Compile Include="GanttChart\GanttRowGroup.cs" />
+    <Compile Include="GanttChart\GanttRowHeader.cs" />
     <Compile Include="GanttChart\GanttRowPanel.cs" />
+    <Compile Include="GanttChart\GanttTask.cs" />
+    <Compile Include="GanttChart\HeaderedGanttRowGroup.cs" />
     <Compile Include="GanttChart\TimeLine.cs" />
     <Compile Include="GanttChart\TimeLineItem.cs" />
     <Compile Include="GanttControl.xaml.cs">

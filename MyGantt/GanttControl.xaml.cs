@@ -50,6 +50,12 @@ namespace nGantt
             this.ganttChartData.MinDate = minDate;
             this.ganttChartData.MaxDate = maxDate;
         }
+        public void AddGanttTask(GanttRow row, GanttTask task)
+        {
+            if (task.Start < ganttChartData.MaxDate && task.End > ganttChartData.MinDate)
+                row.Tasks.Add(task);
+        }
+
         public TimeLine CreateTimeLine(PeriodSplitter.PeriodSplitter splitter, PeriodNameFormatter PeriodNameFormatter)
         {
             if (splitter.MaxDate != GanttData.MaxDate || splitter.MinDate != GanttData.MinDate)
@@ -127,8 +133,77 @@ namespace nGantt
         ////    gridLineTimeLines.Add(timeline);
         ////    //gridLineTimeLine = timeline;
         ////}
+        public HeaderedGanttRowGroup CreateGanttRowGroup(string name)
+        {
+            var rowGroup = new HeaderedGanttRowGroup() { Name = name };
+            ganttChartData.RowGroups.Add(rowGroup);
+            return rowGroup;
+        }
+
+        public ExpandableGanttRowGroup CreateGanttRowGroup(string name, bool isExpanded)
+        {
+            var rowGroup = new ExpandableGanttRowGroup() { Name = name, IsExpanded = isExpanded };
+            ganttChartData.RowGroups.Add(rowGroup);
+            return rowGroup;
+        }
+
+        public GanttRow CreateGanttRow(GanttRowGroup rowGroup, string name)
+        {
+            var rowHeader = new GanttRowHeader() { Name = name };
+            var row = new GanttRow() { RowHeader = rowHeader, Tasks = new ObservableCollection<GanttTask>() };
+            rowGroup.Rows.Add(row);
+            return row;
+        }
+
+        private void selectionRectangle_MouseMove(object sender, MouseEventArgs e)
+        {
+            //ChangeSelectionRectangleSize(sender, e);
+        }
+
+        private void selectionCanvas_MouseLeave(object sender, MouseEventArgs e)
+        {
+            //StopSelection(sender, e);
+        }
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //if (!AllowUserSelection)
+            //    return;
+
+            //// TODO:: Set visibillity to hidden for all selectionRectangles
+            //var canvas = ((Canvas)UIHelper.FindVisualParent<Grid>(((DependencyObject)sender)).FindName("selectionCanvas"));
+            //Border selectionRectangle = (Border)canvas.FindName("selectionRectangle");
+            //selectionStartX = e.GetPosition(canvas).X;
+            //selectionRectangle.Margin = new Thickness(selectionStartX, 0, 0, 5);
+            //selectionRectangle.Visibility = Visibility.Visible;
+            //selectionRectangle.IsEnabled = true;
+            //selectionRectangle.IsHitTestVisible = false;
+            //selectionRectangle.Width = 0;
+        }
+
+        private void Grid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            //StopSelection(sender, e);
+        }
+
+        private void selectionRectangle_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            //((Border)sender).ContextMenu.IsOpen = true;
+        }
 
 
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //if (TaskSelectionMode == SelectionMode.None)
+            //    return;
 
+            //if (TaskSelectionMode == SelectionMode.Single)
+            //    DeselectAllTasks();
+
+            //var gantTask = ((GanttTask)((FrameworkElement)(sender)).DataContext);
+            //gantTask.IsSelected = !gantTask.IsSelected;
+
+            //if (SelectedItemChanged != null)
+            //    SelectedItemChanged(this, EventArgs.Empty);
+        }
     }
 }

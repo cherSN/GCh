@@ -9,6 +9,38 @@
         Title="MainWindow" >
     <!--Title="MainWindow" DataContext="{Binding}" Loaded="Window_Loaded">-->
     <Window.Resources>
+        <DataTemplate x:Key="GanttTimeLineGridLines">
+            <ItemsControl ItemsSource="{Binding}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ItemsControl ItemsSource="{Binding Path=Items}" VerticalAlignment="Center" VerticalContentAlignment="Stretch" Height="{Binding ElementName=Scroller, Path=ExtentHeight}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ng:GanttRowPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" MinDate="{Binding Path=GanttData.MinDate}" MaxDate="{Binding Path=GanttData.MaxDate}"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style>
+                                    <Setter Property="ng:GanttRowPanel.StartDate" Value="{Binding Path=Start}"/>
+                                    <Setter Property="ng:GanttRowPanel.EndDate" Value="{Binding Path=End}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Gray" BorderThickness="0,0,1,0" Background="{Binding BackgroundColor}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DataTemplate>
+
         <DataTemplate x:Key="GanttTimeLineTemplate">
             <ItemsControl x:Name="GanttChartData_TimeLines" ItemsSource="{Binding}">  
                 <ItemsControl.ItemsPanel>
@@ -16,38 +48,32 @@
                         <StackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>  <!--TimeLine=GanttChartData.TimeLines.Items[i]-->
+                <ItemsControl.ItemTemplate>  
                     <DataTemplate>
-                        <StackPanel><!--Delete-->
-                            <TextBox Text="{Binding Name}" Background="{Binding BackgroundColor}"/>
-                            <ItemsControl x:Name="TimeLine" ItemsSource="{Binding Items}" Height="20" AlternationCount="0" Background="{Binding BackgroundColor}"> <!--TimeLine=GanttChartData.TimeLines.Items[i]-->
+                            <ItemsControl x:Name="TimeLine" ItemsSource="{Binding Items}" Height="20" AlternationCount="0" Background="{Binding BackgroundColor}"> 
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <!--<StackPanel Orientation="Horizontal"></StackPanel>-->
                                         <ng:GanttRowPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
-                                    AncestorType={x:Type UserControl}}}" MinDate="{Binding Path=GanttData.MinDate}" 
-                                    MaxDate="{Binding Path=GanttData.MaxDate}"/>
+                                        AncestorType={x:Type local:MainWindow}}}" MinDate="{Binding Path=GanttData.MinDate}" 
+                                        MaxDate="{Binding Path=GanttData.MaxDate}"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemContainerStyle>
                                     <Style>
-                                        <Setter Property="ng:GanttRowPanel.StartDate" Value="{Binding Start}"/>
-                                        <Setter Property="ng:GanttRowPanel.EndDate" Value="{Binding End}"/>
+                                        <Setter x:Name="TimeLineItemStart" Property="ng:GanttRowPanel.StartDate" Value="{Binding Start}"/>
+                                        <Setter x:Name="TimeLineItemEnd" Property="ng:GanttRowPanel.EndDate" Value="{Binding End}"/>
                                     </Style>
                                 </ItemsControl.ItemContainerStyle>
-                                <ItemsControl.ItemTemplate>  <!--TimeLineItem=TimeLine.Items[i]-->
+                                <ItemsControl.ItemTemplate>  
                                     <DataTemplate>
                                         <Border BorderBrush="Gray" BorderThickness="1" Background="{Binding BackgroundColor}">
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Start}" Background="#FFF1F15C"  />
-                                                <TextBlock Text="{Binding End}" Background="#FFED86F7"  />
                                                 <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{Binding Name}" />
                                             </StackPanel>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                        </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -55,9 +81,6 @@
 
         <DataTemplate x:Key="GanttGrid">
             <StackPanel>
-                <TextBox x:Name="myNName"  Text="{Binding NName}" Background="#FFDB88E8"   />
-                <TextBox  Text="{Binding MinDate}" Background="#FFF7F7AF"  />
-                <TextBox  Text="{Binding MaxDate}" Background="#FF48D336" />
                 <Grid Name="GanttMainGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
@@ -69,7 +92,19 @@
                         <ColumnDefinition Width="1"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
+                    <!-- TimeLines -->
                     <ContentControl x:Name="TimeLines" Grid.Row="0" BorderBrush="Blue" BorderThickness="1"  Grid.Column="1" Grid.ColumnSpan="2" ContentTemplate="{StaticResource GanttTimeLineTemplate}" Content="{Binding Path=TimeLines}" Margin="0,0,18,0"/>
+                    <!-- Support rows -->
+                    <Rectangle Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Gray"/>
+                    <Rectangle Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Gray"/>
+                    <ScrollViewer Name="Scroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" Grid.Row="2" Grid.ColumnSpan="3">
+                        <Grid>
+                            <!-- Gridlines -->
+                            <ContentControl ContentTemplate="{StaticResource GanttTimeLineGridLines}" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=GridLineTimeLine}" Margin="100,0,1,0"/>
+                            <!-- RowGroups -->
+                            <ItemsControl ItemsSource="{Binding Path=RowGroups}"/>
+                        </Grid>
+                    </ScrollViewer>
                 </Grid>
             </StackPanel>
         </DataTemplate>
@@ -77,8 +112,6 @@
 
     <Border  x:Name="root" BorderBrush="#FF4D63B7" BorderThickness="6 " Background="#FFCAF6E8" >
         <StackPanel>
-            <!--<TextBox Text="{Binding WName, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}" Background="#FFF7D3C7"   />
-            <TextBox Text="{Binding WName}" Background="#FFF4F7C7"   />-->
             <ContentControl ContentTemplate="{StaticResource GanttGrid}" Content="{Binding Path=GanttData}"/>
         </StackPanel>
     </Border>

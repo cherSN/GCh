@@ -33,7 +33,7 @@ namespace MyGantt
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //nGanttChart = new nGantt.GanttControl();
-            GantLenght = 2;
+            GantLenght = 20;
 
             //DateTime minDate = DateTime.Parse("2018-02-01");
             //DateTime maxDate = minDate.AddDays(GantLenght);
@@ -87,11 +87,11 @@ namespace MyGantt
             //nGanttChart.SetGridLinesTimeline(gridLineTimeLine, DetermineBackground);
 
             //// Create and data
-            //var rowgroup1 = nGanttChart.CreateGanttRowGroup("Group");
-            //var row1 = nGanttChart.CreateGanttRow(rowgroup1, "GanttRow 1");
-            //nGanttChart.AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2012-02-01"), End = DateTime.Parse("2012-02-03"), Name = "GanttRow 1:GanttTask 1", TaskProgressVisibility = System.Windows.Visibility.Hidden });
-            //nGanttChart.AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2012-02-05"), End = DateTime.Parse("2012-03-01"), Name = "GanttRow 1:GanttTask 2" });
-            //nGanttChart.AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2012-06-01"), End = DateTime.Parse("2012-06-15"), Name = "GanttRow 1:GanttTask 3" });
+            var rowgroup1 = nGanttChart.CreateGanttRowGroup("Group");
+            var row1 = nGanttChart.CreateGanttRow(rowgroup1, "GanttRow 1");
+            nGanttChart.AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2018-01-01"), End = DateTime.Parse("2018-01-03"), Name = "GanttRow 1:GanttTask 1", TaskProgressVisibility = System.Windows.Visibility.Hidden });
+            nGanttChart.AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2018-01-05"), End = DateTime.Parse("2018-01-09"), Name = "GanttRow 1:GanttTask 2" });
+            nGanttChart.AddGanttTask(row1, new GanttTask() { Start = DateTime.Parse("2018-01-01"), End = DateTime.Parse("2018-01-15"), Name = "GanttRow 1:GanttTask 3" });
 
             //var rowgroup2 = nGanttChart.CreateGanttRowGroup("ExpandableGanttRowGroup", true);
             //var row2 = nGanttChart.CreateGanttRow(rowgroup2, "GanttRow 2");
