@@ -17,7 +17,8 @@ namespace nGantt.GanttChart
         public ObservableCollection<TimeLine> TimeLines { get; set; }
         public DateTime MinDate { get; set; }
         public DateTime MaxDate { get; set; }
-        public string Name { get; set; }
+        public string NName { get; set; }
+        public DateTime MMMDate { get; set; }
 
     }
 }
